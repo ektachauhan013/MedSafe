@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Interaction Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="icon">💊</span>
+                <h1>MedSafe Check</h1>
+            </div>
+            <div id="user-info" class="hidden">
+                <span id="current-user-name"></span>
+                <button id="logout-btn" class="btn-text">Sign Out</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- View: Sign In -->
+            <section id="auth-view" class="view-section active">
+                <div class="card auth-card">
+                    <h2>Welcome to MedSafe</h2>
+                    <p class="subtitle">Check medicine interactions safely.</p>
+                    
+                    <form id="auth-form">
+                        <div class="form-group">
+                            <label for="auth-phone">Phone Number</label>
+                            <input type="tel" id="auth-phone" required placeholder="User Identification (e.g. 555-0123)">
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-name">Full Name</label>
+                            <input type="text" id="auth-name" required placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="auth-email">Email (Optional)</label>
+                            <input type="email" id="auth-email" placeholder="email@example.com">
+                        </div>
+                        <button type="submit" class="btn-primary">Start Scanning</button>
+                    </form>
+                    
+                    <div id="existing-profiles" class="hidden">
+                        <h3>Select Profile</h3>
+                        <div id="profile-list" class="profile-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: Profile Creation -->
+            <section id="profile-view" class="view-section hidden">
+                <div class="card">
+                    <h2>Create Safety Profile</h2>
+                    <p class="subtitle">We use this to warn you about specific risks.</p>
+
+                    <form id="profile-form">
+                        <!-- Step 1: Basic Info -->
+                        <fieldset>
+                            <legend>Basic Information</legend>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p-gender">Gender</label>
+                                    <select id="p-gender" required>
+                                        <option value="">Select...</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p-age">Age Group</label>
+                                    <select id="p-age" required>
+                                        <option value="">Select...</option>
+                                        <option value="child">Child (0-12)</option>
+                                        <option value="adult">Adult (13-64)</option>
+                                        <option value="elderly">Elderly (65+)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p-weight">Weight (kg)</label>
+                                    <input type="number" id="p-weight" min="1" max="300" placeholder="Kg">
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Step 2: Health & Sensitivity -->
+                        <fieldset>
+                            <legend>Health & Sensitivity</legend>
+                            
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="p-stomach">
+                                <label for="p-stomach">Sensitive Stomach?</label>
+                            </div>
+
+                            <div id="female-questions" class="hidden">
+                                <div class="form-group checkbox-group">
+                                    <input type="checkbox" id="p-pregnant">
+                                    <label for="p-pregnant">Pregnant or Breastfeeding?</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="p-allergies">Known Allergies (Optional)</label>
+                                <input type="text" id="p-allergies" placeholder="e.g., Penicillin, Peanuts">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Chronic Conditions</label>
+                                <div class="grid-checkboxes">
+                                    <label><input type="checkbox" name="conditions" value="diabetes"> Diabetes</label>
+                                    <label><input type="checkbox" name="conditions" value="bp"> Blood Pressure</label>
+                                    <label><input type="checkbox" name="conditions" value="asthma"> Asthma</label>
+                                    <label><input type="checkbox" name="conditions" value="thyroid"> Thyroid</label>
+                                    <label><input type="checkbox" name="conditions" value="none"> None</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Step 3: Lifestyle -->
+                        <fieldset>
+                            <legend>Lifestyle</legend>
+                            <div class="form-group">
+                                <label>Alcohol Consumption</label>
+                                <select id="p-alcohol">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="occasionally">Occasionally</option>
+                                </select>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="p-smoking">
+                                <label for="p-smoking">Do you smoke?</label>
+                            </div>
+                        </fieldset>
+
+                         <!-- Step 4: Consent -->
+                         <div class="form-group consent-group">
+                            <input type="checkbox" id="p-consent" required>
+                            <label for="p-consent">I consent to using my profile data for medicine safety recommendations.</label>
+                         </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">Save Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+             <!-- View: Medicine Scanner -->
+             <section id="scanner-view" class="view-section hidden">
+                <div class="card scanner-card">
+                    <h2>Check Interaction</h2>
+                    <p class="subtitle">Enter two medicines to check if they are safe together.</p>
+
+                    <form id="scanner-form">
+                        <div class="scanner-inputs">
+                            <div class="form-group">
+                                <label>Medicine 1</label>
+                                <input type="text" id="scan-med-1" required placeholder="e.g. Paracetamol" list="med-list">
+                            </div>
+                            <div class="form-group">
+                                <label>Medicine 2</label>
+                                <input type="text" id="scan-med-2" required placeholder="e.g. Ibuprofen" list="med-list">
+                            </div>
+                            <datalist id="med-list">
+                                <!-- Populated by JS -->
+                            </datalist>
+                        </div>
+                        <button type="submit" class="btn-primary btn-large">Scan for Risks</button>
+                    </form>
+                </div>
+             </section>
+
+             <!-- View: Results -->
+             <section id="results-view" class="view-section hidden">
+                 <div class="card results-card" id="results-card">
+                    <button id="scan-again-btn" class="btn-text back-link">← Check Another</button>
+                    
+                    <div id="result-header" class="result-header">
+                        <!-- Dynamic Status Icon & Text -->
+                    </div>
+
+                    <div id="result-details" class="result-body">
+                        <!-- Dynamic Content -->
+                    </div>
+
+                    <div class="disclaimer-box">
+                        <span class="icon">⚠️</span>
+                        <p>This tool provides general safety guidance and is not a substitute for professional medical advice.</p>
+                    </div>
+                 </div>
+             </section>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
